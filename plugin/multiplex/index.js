@@ -19,26 +19,13 @@ io.on( 'connection', function( socket ) {
 	socket.on('multiplex-statechanged', function(data) {
 		if (typeof data.secret == 'undefined' || data.secret == null || data.secret === '') return;
 		if (createHash(data.secret) === data.socketId) {
+			console.log('emiting');
 			data.secret = null;
 			socket.broadcast.emit(data.socketId, data);
 		};
 	});
-});
-
-[ 'css', 'js', 'plugin', 'lib' ].forEach(function(dir) {
-	app.use('/' + dir, staticDir(opts.baseDir + dir));
-});
-
-app.get("/", function(req, res) {
-	res.writeHead(200, {'Content-Type': 'text/html'});
-
-	var stream = fs.createReadStream(opts.baseDir + '/index.html');
-	stream.on('error', function( error ) {
-		res.write('<style>body{font-family: sans-serif;}</style><h2>reveal.js multiplex server.</h2><a href="/token">Generate token</a>');
-		res.end();
-	});
-	stream.on('readable', function() {
-		stream.pipe(res);
+	socket.on('error', function( err ) {
+		console.log( 'Err: ' + err );
 	});
 });
 
@@ -50,15 +37,17 @@ app.get("/token", function(req,res) {
 });
 
 var createHash = function(secret) {
-	var cipher = crypto.createCipher('blowfish', secret);
-	return(cipher.final('hex'));
+	var cipher = crypto.createCipher('blowfish', new Buffer(secret.toString(), "utf-8") );
+	var ciphered = cipher.final('hex');
+	console.log(secret + '(' + typeof secret + ') ' + ' = ' + secret.toString() + ' -> ' + ciphered);
+	return(ciphered);
 };
 
 // Actually listen
 server.listen( opts.port || null );
 
-var brown = '\033[33m',
-	green = '\033[32m',
-	reset = '\033[0m';
+var brown = '\x1B[33m',
+	green = '\x1B[32m',
+	reset = '\x1B[0m';
 
 console.log( brown + "reveal.js:" + reset + " Multiplex running on port " + green + opts.port + reset );

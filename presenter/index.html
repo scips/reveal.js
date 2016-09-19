@@ -72,7 +72,7 @@
 				history: true,
 			    multiplex: {
 			        // Example values. To generate your own, see the socket.io server instructions.
-			        secret: 'SECRET_UID', // Obtained from the socket.io server. Gives this (the master) control of the presentation
+			        secret: '14750208047642777620', // Obtained from the socket.io server. Gives this (the master) control of the presentation
 			        id: 'fc5bac8456f4939d', // Obtained from socket.io server
 			        url: 'http://localhost:1948/' // Location of socket.io server
 			    },
@@ -83,7 +83,7 @@
 					{ src: 'plugin/notes/notes.js', async: true },
 					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
 					{ src: 'socket.io/socket.io.js', async: true },
-					{ src: 'plugin/multiplex/CLIENT_MASTER.js', async: true },
+					{ src: 'plugin/multiplex/master.js', async: true },
 					// WITH_OR_WITHOUT_NOTE
 					{ src: 'plugin/notes-server/client.js', async: true }
 					// WITH_OR_WITHOUT_NOTE
