@@ -8,58 +8,70 @@ var app       = express();
 var staticDir = express.static;
 var server    = http.createServer(app);
 
+var qr        = require('qr-image');
+
 io = io(server);
 
 var opts = {
-	port :      1947,
-	baseDir :   __dirname + '/../../'
+    port :      1947,
+    baseDir :   __dirname + '/../../'
 };
 
 io.on( 'connection', function( socket ) {
 
-	socket.on( 'new-subscriber', function( data ) {
-		socket.broadcast.emit( 'new-subscriber', data );
-	});
+    socket.on( 'new-subscriber', function( data ) {
+        socket.broadcast.emit( 'new-subscriber', data );
+    });
 
-	socket.on( 'statechanged', function( data ) {
-		delete data.state.overview;
-		socket.broadcast.emit( 'statechanged', data );
-	});
+    socket.on( 'statechanged', function( data ) {
+        delete data.state.overview;
+        socket.broadcast.emit( 'statechanged', data );
+    });
 
-	socket.on( 'statechanged-speaker', function( data ) {
-		delete data.state.overview;
-		socket.broadcast.emit( 'statechanged-speaker', data );
-	});
+    socket.on( 'statechanged-speaker', function( data ) {
+        delete data.state.overview;
+        socket.broadcast.emit( 'statechanged-speaker', data );
+    });
 
 });
 
-[ 'css', 'js', 'images', 'plugin', 'lib' ].forEach( function( dir ) {
-	app.use( '/' + dir, staticDir( opts.baseDir + dir ) );
+[ 'css', 'js', 'images', 'plugin', 'lib', 'assets' ].forEach( function( dir ) {
+    app.use( '/' + dir, staticDir( opts.baseDir + dir ) );
 });
 
 app.get('/', function( req, res ) {
-
-	res.writeHead( 200, { 'Content-Type': 'text/html' } );
-	fs.createReadStream( opts.baseDir + '/index.html' ).pipe( res );
-
+    console.log(req.connection.remoteAddress);
+    if( req.connection.remoteAddress == '127.0.0.1' || req.connection.remoteAddress == '::ffff:127.0.0.1') {
+        res.writeHead( 200, { 'Content-Type': 'text/html' } );
+        fs.createReadStream( opts.baseDir + '/presenter/index.html' ).pipe( res );
+    } else {
+        res.writeHead( 200, { 'Content-Type': 'text/html' } );
+        fs.createReadStream( opts.baseDir + '/public/index.html' ).pipe( res );
+    }
 });
 
 app.get( '/notes/:socketId', function( req, res ) {
 
-	fs.readFile( opts.baseDir + 'plugin/notes-server/notes.html', function( err, data ) {
-		res.send( Mustache.to_html( data.toString(), {
-			socketId : req.params.socketId
-		}));
-	});
+    fs.readFile( opts.baseDir + 'plugin/notes-server/notes.html', function( err, data ) {
+        res.send( Mustache.to_html( data.toString(), {
+            socketId : req.params.socketId
+        }));
+    });
 
+});
+
+app.get( '/qr.png' , function( req, res ) {
+    var code = qr.image('http://10.1.0.24:1947', { type: 'png' });
+    res.type('png');
+    code.pipe(res);
 });
 
 // Actually listen
 server.listen( opts.port || null );
 
-var brown = '\033[33m',
-	green = '\033[32m',
-	reset = '\033[0m';
+var brown = '\x1B[33m',
+    green = '\x1B[32m',
+    reset = '\x1B[0m';
 
 var slidesLocation = 'http://localhost' + ( opts.port ? ( ':' + opts.port ) : '' );
 
