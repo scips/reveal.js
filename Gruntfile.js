@@ -134,43 +134,6 @@ module.exports = function(grunt) {
 			options: {
 				livereload: true
 			}
-		},
-
-		copy: {
-			public: {
-				files: [
-					{
-						expand: false,
-						src: 'index.html',
-						dest: 'public/index.html',
-					}
-				],
-				options: {
-					process: function (content, srcpath) {
-						content = content.replace('\'SECRET_UID\'','null');
-						content = content.replace('CLIENT_MASTER','client');
-						content = content.replace('http://localhost:1948/','http://10.1.0.24:1948/');
-						content = content.replace(/(\/\/\s*WITH_OR_WITHOUT_NOTE)(\s.*)*(\/\/\s*WITH_OR_WITHOUT_NOTE)/,'');
-						return content;
-					}
-				}
-			},
-			presenter: {
-				files: [
-					{
-						expand: false,
-						src: 'index.html',
-						dest: 'presenter/index.html',
-					}
-				],
-				options: {
-					process: function (content, srcpath) {
-						content = content.replace('\'SECRET_UID\'','\'14750208047642777620\'');
-						content = content.replace('CLIENT_MASTER','master');
-						return content;
-					}
-				}
-			}
 		}
 
 	});
@@ -185,7 +148,6 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks( 'grunt-contrib-connect' );
 	grunt.loadNpmTasks( 'grunt-autoprefixer' );
 	grunt.loadNpmTasks( 'grunt-zip' );
-	grunt.loadNpmTasks( 'grunt-contrib-copy' );
 
 	// Default task
 	grunt.registerTask( 'default', [ 'css', 'js' ] );
@@ -210,8 +172,5 @@ module.exports = function(grunt) {
 
 	// Run tests
 	grunt.registerTask( 'test', [ 'jshint', 'qunit' ] );
-
-	// Build presenter and public version
-	grunt.registerTask( 'pres-pack', [ 'default', 'copy' ] );
 
 };
