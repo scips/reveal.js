@@ -27,24 +27,253 @@
 				<section>
 					<img data-src="" />
 					<h1>Progressive Apps with an amazing speaker (Jeff Burtoft - ManifoldJS)</h1>
+					<em>https://github.com/boyofgreen, http://www.html5hacks.com/</em>
 					<aside class="notes">
 						Test note: press 's'
 				    </aside>
 				</section>
 				<section>
+					<section>
+					<p>
+						<strong>Progressive Web Apps</strong> is a trendy term right now.
+					</p>
+					<p>It's a marketing term! Coming from the guys at chrome</p>
+					<p>It's going on a directiion where webapps foes what the real apps does without loosing the Web abilities</p>
+					</section>
+					<section>
+					<p>Instead providing a lesser experience for low end browser, provide a layered experience for everyone</p>
+					</section>
+					<section>
+						<p>Exemple with notification: if it's not supported keep the business working with simple ways</p>
+					</section>
+					<section>
+						<ul>
+							<li>Service Worker (Group of technology, background task, offline, proxy...)</li>
+							<li>Manifest (W3C replace FirefoxOS, ...)</li>
+							<li>App Container (How you display and manage the app [install, uninstall experience...])</li>
+						</ul>
+					</section>
+				</section>
+				<section>
+
+				<section>
+					<h2>Service worker</h2>
+				</section>
+				<section>
+					<ul>
+						<li>Promises</li>
+						<li>CacheAPI</li>
+						<li>Notifications</li>
+						<li>Fetch</li>
 				</section>
 				<section>
 					<section>
-					</section>
-					<section data-background-image="assets/multiscreen.jpg">
-					</section>
-					<section data-background-image="assets/bbc.jpg">
+						<h2>Fetch</h2>
+						<p>Normalize everything related to ajax, post, xmlHttpRequest...</p>
+						<pre>
+							var myImage = document.querySelector('my-image');
+							fetch('iamge/test.jpg');
+						</pre>
 					</section>
 					<section>
+						<h3>Fire a 'fetch' event</h3>
+						<pre>
+							addEventListener('fetch', function (event){
+								event.respondWith()
+							});
+						</pre>
 					</section>
 				</section>
 				<section>
-					<h1>Questions?</h1>
+					<h3>Add promises</h3>
+					<p>Promises are <strong>thenable</strong></p>
+					<p>Promises have 4 states: done, </p>
+					<pre>
+						var myImage = document.querySelector('my-image');
+						fetch('image/test.jpg').then(function (content){
+							// blob() process the blob -> chain promises
+							content.blob().then(function (imgData) {
+								var urlData = URL.createContentURL();
+								myIamge.src = urlData;
+							});
+						});
+					</pre>
+				</section>
+				<section>
+					<h3>Add Service Worker</h3>
+					<p>Service Worker cleaning first</p>
+					<p>Link to dev tools</p>
+				</section>
+				<section>
+					<h3>Add Service Worker (really)</h3>
+					<pre>
+						navigator.register.serviceWorker('serviceworker.js');
+					</pre>
+					<p>
+						You don't have a service worker at first load!!!
+					</p>
+				</section>
+				<section>
+					<h3>Fetchs fire events</h3>
+				</section>
+				<section>
+					<h3>Give scope to service worker</h3>
+					<pre>
+						{scope: '.'}
+					</pre>
+				</section>
+				<section>
+					<h3></h3>
+					<pre>
+						addEventListenre('activate', ...
+							// once resolved call
+								claim()
+					</pre>
+				</section>
+				<section>
+					<h3>Communicate with Service Worker</h3>
+					<pre>
+						postMessage
+					</pre>
+				</section>
+				<section>
+					<section>
+						<h2>Promises</h2>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Notifications</h2>
+					</section>
+					<section>
+						<pre>new Notification();</pre>
+					</section>
+					<section>
+						<p>Request permission</p>
+						<pre>
+							Notification.requestPermission().then();
+						</pre>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Cache API</h2>
+						<pre>
+							cache.open(CACHE_NAME).then(function cache(){ cache.addAll();});
+						</pre>
+					</section>
+					<section>
+						<h3>Add all the files needed in the cache</h3>
+						<p>
+							cache.addAll(['file1','file2']);
+						</p>
+					</section>
+					<section>
+						<h3>Working with cache</h3>
+						<pre>
+						cache.match().then(return ...); 
+						// otherwise fetch it really
+						</pre>
+					</section>
+					<section>
+						<h3>How to work with the cache</h3>
+						<p>Use filename as cache key and method access that check the cache and smoothly call fetch if the file is not there</p>
+					</section>
+					<section>
+						<h3>Cleaning stuff</h3>
+						<ul>
+							<li>Version the service worker</li>
+							<li>Enable app communication with a server that check versions</li>
+							<li>use Expires</li>
+						</ul>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Feature Detection</h2>
+					</section>
+					<section>
+						<pre>
+							if(navigator.serviceWorker) {
+								// request permission for notification							
+							}
+						</pre>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>W3C Manifest</h2>
+					</section>
+					<section>
+						<ul>
+							<li>Start page</li>
+							<li>Scope</li>
+							<li>Theme</li>
+							<li>Icons</li>
+							<li>Languages</li>
+							<li>etc...</li>
+						</ul>
+					</section>
+					<section>
+						<h3>Issues</h3>
+						<p>
+							<strong>Icons:</strong>Images sizes for different devices (iOS, Android, Firefox...) have different sizes
+						</p>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>App container</h2>
+						<p>
+							Presentation - Backgrounding - App Managmement - Install/Uninstall
+						</p>
+						<p>
+							<strong>Backgrounding</strong>: App container should allows the app to run in a background
+						</p>
+					</section>
+					<section>
+						<h3>Issues</h3>
+						<p>
+							<strong>Chrome</strong>: Add to Desktop takes some of the component but not all of them + create the shortcut: so it's mainly opening chrome. (In task manager: see chrome + uninstall -> uninstall chrome!!!)
+							<strong>Win10</strong>: 
+						</p>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Manifoldjs</h2>
+						<p>
+							Package the app in the appropriate container. On windows create an hosted webapp.
+						</p>
+						<pre>
+							manifoldjs package win10
+						</pre>
+					</section>
+					<section>
+						<p>Pave the path to progressive webapps by providing a simple way to package and provide native OS features.</p>
+					</section>
+				</section>
+				<section>
+					<h2>Next</h2>
+				</section>
+				<section>
+					<section>
+						<h1>Questions?</h1>
+					</section>
+					<section>
+						<p>Why don't go the chrome way and why package app?</p>
+						<p><em>We are going there, Bing will find website and package them????</em></p>
+					</section>
+					<section>
+						<p>Manifoldjs for MacOSX</p>
+						<p><em>Not yet, if more people ask for it we can do it</em></p>
+					</section>
+					<section>
+						<p>Download new app with notification (download the new app)?</p>
+						<p><em>Compare the #of websites and imagine if everyside do that at the same time!!! The idea is to add functionnality as you visit but that's not great</em></p>
+						<p>Download via the app not the browser</p>
+						<p><em>Not implemented anywhere yet, windows will have it in the next version, but you need access to the OS version</em></p>
+					</section>
 				</section>
 				<section>
 					<h1>Thanks!</h1>

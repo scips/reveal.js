@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>IBC 2016 - retrospective</title>
+		<title>Progressive Apps</title>
 
 		<link rel="stylesheet" href="css/reveal.css">
 		<link rel="stylesheet" href="css/theme/night.css">
@@ -25,33 +25,184 @@
 		<div class="reveal">
 			<div class="slides">
 				<section>
-					<img data-src="http://www.ibc.org/__media/Page-Content/IBC2016_logo_200_175.jpg" />
-					<h1>IBC 2016</h1>
+					<img data-src="" />
+					<h1>Progressive Apps with an amazing speaker (Jeff Burtoft - ManifoldJS)</h1>
+					<em>https://github.com/boyofgreen, http://www.html5hacks.com/</em>
 					<aside class="notes">
 						Test note: press 's'
 				    </aside>
 				</section>
 				<section>
+					<section>
 					<p>
-						To follow: <img data-src="qr.png" />
+						<strong>Progressive Web Apps</strong> is a trendy term right now.
 					</p>
+					<p>It's a marketing term! Coming from the guys at chrome</p>
+					<p>It's going on a directiion where webapps foes what the real apps does without loosing the Web abilities</p>
+					</section>
+					<section>
+					<p>Instead providing a lesser experience for low end browser, provide a layered experience for everyone</p>
+					</section>
+					<section>
+						<p>Exemple with notification: if it's not supported keep the business working with simple ways</p>
+					</section>
+					<section>
+						<ul>
+							<li>Service Worker (Group of technology, background task, offline, proxy...)</li>
+							<li>Manifest (W3C replace FirefoxOS, ...)</li>
+							<li>App Container (How you display and manage the app [install, uninstall experience...])</li>
+						</ul>
+					</section>
 				</section>
 				<section>
 					<section>
-						<h1>Next</h1>
-					</section>
-					<section data-background-image="assets/multiscreen.jpg">
-					</section>
-					<section data-background-image="assets/bbc.jpg">
-						<div style="background: rgba(0,0,0,0.5)">
-							<p>NMOS: Network Media Open Specification</p>
-							<p>Node, Devices, Sender, Receiver</p>
-							<p>A lot of work to create new standards (Ex: SMPTE 2022)</p>
-							<p>Internet First - Small devices ready (html5 - dash)</p>
-						</div>
+						<h2>Service worker</h2>
 					</section>
 					<section>
-						<a href="http://sandbox.vrt.be/news/2016/6/9/vrt-sandbox-liveip-project-wins-ebu-award-for-technology-and-innovation">VRT</a>
+						<ul>
+							<li>Promises</li>
+							<li>CacheAPI</li>
+							<li>Notifications</li>
+							<li>Fetch</li>
+					</section>
+					<section>
+						<section>
+							<h2>Fetch</h2>
+							<p>Normalize everything related to ajax, post, xmlHttpRequest...</p>
+							<pre>
+								var myImage = document.querySelector('my-image');
+								fetch('iamge/test.jpg');
+							</pre>
+						</section>
+						<section>
+							<h3>Fire a 'fetch' event</h3>
+							<pre>
+								addEventListener('fetch', function (event){
+									event.respondWith()
+								});
+							</pre>
+						</section>
+					</section>
+					<section>
+						<h3>Add promises</h3>
+						<p>Promises are <strong>thenable</strong></p>
+						<p>Promises have 4 states: done, </p>
+						<pre>
+							var myImage = document.querySelector('my-image');
+							fetch('image/test.jpg').then(function (content){
+								// blob() process the blob -> chain promises
+								content.blob().then(function (imgData) {
+									var urlData = URL.createContentURL();
+									myIamge.src = urlData;
+								});
+							});
+						</pre>
+					</section>
+					<section>
+						<h3>Add Service Worker</h3>
+						<p>Service Worker cleaning first</p>
+						<p>Link to dev tools</p>
+					</section>
+					<section>
+						<h3>Add Service Worker (really)</h3>
+						<pre>
+							navigator.register.serviceWorker('serviceworker.js');
+						</pre>
+						<p>
+							You don't have a service worker at first load!!!
+						</p>
+					</section>
+					<section>
+						<h3>Fetchs fire events</h3>
+					</section>
+					<section>
+						<h3>Give scope to service worker</h3>
+						<pre>
+							{scope: '.'}
+						</pre>
+					</section>
+					<section>
+						<h3></h3>
+						<pre>
+							addEventListenre('activate', ...
+								// once resolved call
+									claim()
+						</pre>
+					</section>
+					<section>
+						<h3>Communicate with Service Worker</h3>
+						<pre>
+							postMessage
+						</pre>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Promises</h2>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Notifications</h2>
+					</section>
+					<section>
+						<pre>new Notification();</pre>
+					</section>
+					<section>
+						<p>Request permission</p>
+						<pre>
+							Notification.requestPermission().then();
+						</pre>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Cache API</h2>
+						<pre>
+							cache.open(CACHE_NAME).then(function cache(){ cache.addAll();});
+						</pre>
+					</section>
+					<section>
+						<h3>Add all the files needed in the cache</h3>
+						<p>
+							cache.addAll(['file1','file2']);
+						</p>
+					</section>
+					<section>
+						<h3>Working with cache</h3>
+						<pre>
+						cache.match().then(return ...); 
+						// otherwise fetch it really
+						</pre>
+					</section>
+					<section>
+						<h3>How to work with the cache</h3>
+						<p>Use filename as cache key and method access that check the cache and smoothly call fetch if the file is not there</p>
+					</section>
+					<section>
+						<h3>Cleaning stuff</h3>
+						<ul>
+							<li>Version the service worker</li>
+							<li>Enable app communication with a server that check versions</li>
+							<li>use Expires</li>
+						</ul>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Feature Detection</h2>
+					</section>
+					<section>
+						<pre>
+							if(navigator.serviceWorker) {
+								// request permission for notification							
+							}
+						</pre>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>W3C Manifest</h2>
 					</section>
 				</section>
 				<section>
